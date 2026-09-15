@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICT461 Course Registration | Web Systems &amp; Distributed Systems</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>ICT</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+    :root { --bg: #09111f; --surface: #111d2f; --surface-raised: #17263b; --text: #f2f6f8; --muted: #91a4b8; --border: rgba(167, 190, 208, 0.18); --primary: #d8ff55; --primary-hover: #e8ff8b; --ink: #101a20; --error: #ff7b79; --success: #8ee7b2; --radius: 10px; }
+    [data-theme="light"] { --bg: #eef3f2; --surface: #ffffff; --surface-raised: #f6faf7; --text: #142329; --muted: #63777d; --border: rgba(20, 35, 41, 0.14); --primary: #b4db22; --primary-hover: #c8ed3e; --ink: #142329; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; line-height: 1.5; font-size: 16px; background-image: radial-gradient(circle at 83% 8%, rgba(216, 255, 85, 0.1), transparent 24rem), linear-gradient(135deg, rgba(255,255,255,0.025) 25%, transparent 25%); background-size: auto, 7px 7px; }
+    body::before { content: ''; position: fixed; width: 18rem; height: 18rem; border: 1px solid rgba(216, 255, 85, 0.18); border-radius: 50%; right: -7rem; top: 8rem; pointer-events: none; }
+    header { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.1rem clamp(1.25rem, 5vw, 5rem); background: rgba(9, 17, 31, 0.84); border-bottom: 1px solid var(--border); backdrop-filter: blur(18px); }
+    [data-theme="light"] header { background: rgba(238, 243, 242, 0.84); }
+    header strong { color: var(--primary); font-size: 1.1rem; letter-spacing: 0.08em; }
+    nav ul { display: flex; list-style: none; gap: 1.7rem; align-items: center; }
+    nav a, nav button { color: var(--muted); text-decoration: none; background: none; border: none; font: inherit; cursor: pointer; transition: color 0.2s; }
+    nav a:hover, nav button:hover { color: var(--primary); }
+    nav button { font-size: 0.88rem; font-weight: 600; }
+    .mobile-menu-btn { display: none; color: var(--text); background: none; border: 1px solid var(--border); padding: 0.4rem 0.7rem; border-radius: 6px; }
+    main { max-width: 1180px; margin: 0 auto; padding: clamp(3.5rem, 8vw, 7rem) clamp(1.25rem, 5vw, 5rem) 8rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1.5rem, 4vw, 3rem); margin-bottom: 1.5rem; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.16); }
+    #register { position: relative; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr); gap: clamp(2rem, 7vw, 6.5rem); overflow: hidden; }
+    #register::after { content: 'ICT / 461'; position: absolute; right: 2rem; top: 1.5rem; color: rgba(216, 255, 85, 0.3); font: 500 0.75rem 'DM Mono', monospace; letter-spacing: 0.08em; }
+    .intro { padding-top: 2.3rem; }
+    .eyebrow { color: var(--primary); font: 500 0.75rem 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1.2rem; }
+    h1, h2 { line-height: 1.05; letter-spacing: -0.04em; }
+    h1 { max-width: 9ch; font-size: clamp(3rem, 7vw, 6.2rem); margin-bottom: 1.4rem; }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 1rem; }
+    .intro > p { max-width: 30rem; color: var(--muted); font-size: 1.08rem; }
+    .course-mark { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 24rem; margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+    .course-mark strong { display: block; color: var(--text); font-size: 1rem; }
+    .course-mark span { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; }
+    .form-wrap { background: var(--surface-raised); border: 1px solid var(--border); border-radius: 8px; padding: clamp(1.25rem, 3vw, 2rem); }
+    .form-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 1.8rem; }
+    .form-heading h2 { font-size: 1.45rem; margin: 0; }
+    .form-heading span { color: var(--muted); font: 0.72rem 'DM Mono', monospace; }
+    .form-group { margin-bottom: 1.1rem; }
+    label { display: block; margin-bottom: 0.45rem; color: var(--muted); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: 6px; outline: none; background: var(--bg); color: var(--text); font: inherit; transition: border-color 0.2s, box-shadow 0.2s; }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(216, 255, 85, 0.12); }
+    .password-container { position: relative; }
+    .password-container input { padding-right: 4rem; }
+    .toggle-password { position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary); cursor: pointer; font: 500 0.75rem 'DM Mono', monospace; }
+    .checkbox-group { display: flex; align-items: center; gap: 0.65rem; margin-top: 1.3rem; }
+    .checkbox-group label { margin: 0; color: var(--muted); font-size: 0.78rem; text-transform: none; letter-spacing: 0; }
+    input[type="checkbox"] { width: 1rem; height: 1rem; accent-color: var(--primary); }
+    .btn { display: inline-flex; justify-content: center; align-items: center; gap: 0.7rem; background: var(--primary); color: var(--ink); border: none; padding: 0.9rem 1.3rem; border-radius: 6px; cursor: pointer; font: 700 0.88rem 'Space Grotesk', sans-serif; transition: transform 0.2s, background 0.2s; }
+    .btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+    #submitBtn { width: 100%; margin-top: 1.2rem; }
+    .error-msg { color: var(--error); font-size: 0.78rem; display: none; margin-top: 0.35rem; }
+    .form-state { padding: 0.8rem 1rem; border-radius: 6px; margin-bottom: 1rem; display: none; font-size: 0.85rem; }
+    .form-state.error { background: rgba(255, 123, 121, 0.1); color: var(--error); border: 1px solid rgba(255, 123, 121, 0.4); }
+    .form-state.success { background: rgba(142, 231, 178, 0.1); color: var(--success); border: 1px solid rgba(142, 231, 178, 0.4); }
+    .spinner { display: none; width: 18px; height: 18px; border: 2px solid rgba(16, 26, 32, 0.25); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #terms, #privacy { display: grid; grid-template-columns: minmax(180px, 0.3fr) 1fr; gap: 2rem; align-items: start; box-shadow: none; background: transparent; }
+    #terms h2, #privacy h2 { color: var(--primary); font-size: 1.2rem; margin: 0; }
+    #terms p, #privacy p { color: var(--muted); max-width: 48rem; }
+    .modal, .banner { position: fixed; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4); }
+    .modal { top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 2rem; border-radius: var(--radius); display: none; z-index: 200; width: 90%; max-width: 400px; }
+    .modal p { color: var(--muted); }
+    .banner { bottom: 1rem; left: 1rem; right: 1rem; max-width: 780px; margin: auto; padding: 0.8rem 1rem 0.8rem 1.2rem; border-radius: 8px; display: flex; gap: 1rem; justify-content: space-between; align-items: center; z-index: 150; }
+    .banner p { color: var(--muted); font-size: 0.8rem; }
+    .hidden { display: none !important; }
+    @media (max-width: 760px) { header { padding: 1rem 1.25rem; } .mobile-menu-btn { display: block; } nav ul { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; align-items: flex-start; background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 1.25rem; } nav ul.active { display: flex; } main { padding-top: 2.5rem; } #register { grid-template-columns: 1fr; gap: 2rem; } #register::after { display: none; } .intro { padding-top: 0; } h1 { font-size: clamp(3.2rem, 17vw, 5rem); } .course-mark { margin-top: 2rem; } #terms, #privacy { grid-template-columns: 1fr; gap: 0.7rem; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <strong>ICT461</strong>
+    <button class="mobile-menu-btn" id="menuToggle" aria-label="Toggle Navigation">Menu</button>
+    <nav>
+      <ul id="navLinks">
+        <li><a href="#register">Register</a></li>
+        <li><a href="#terms">Terms</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><button id="themeToggle" type="button" aria-pressed="false">Light Mode</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="register" class="card">
+      <div class="intro">
+        <p class="eyebrow">Department of Information &amp; Communication Technology</p>
+        <h1>Web Systems &amp; Distributed Systems.</h1>
+        <p>Register for ICT461 and study the architecture, communication, and reliability patterns behind connected software.</p>
+        <div class="course-mark">
+          <div><strong>ICT461</strong><span>Course code</span></div>
+          <div><strong>Web</strong><span>Systems</span></div>
+          <div><strong>Distributed</strong><span>Systems</span></div>
+        </div>
+      </div>
+      <div class="form-wrap">
+        <div class="form-heading"><h2>Register for the course</h2><span>ICT461</span></div>
+        <div id="formAlert" class="form-state" role="status" aria-live="polite"></div>
+        <form id="registrationForm" novalidate>
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="name" autocomplete="name" required>
+          <span class="error-msg" id="nameError">Name is required.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Student Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+          <span class="error-msg" id="emailError">Please enter a valid email address.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Account Password</label>
+          <div class="password-container">
+            <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
+            <button type="button" class="toggle-password" id="togglePassword">Show</button>
+          </div>
+          <span class="error-msg" id="passwordError">Password must be at least 8 characters.</span>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="termsCheck" required>
+          <label for="termsCheck">I accept the Terms and Conditions</label>
+        </div>
+        <span class="error-msg" id="termsError">You must accept the terms to proceed.</span>
+
+        <button type="submit" class="btn" id="submitBtn">
+          <span class="btn-text">Complete Registration</span>
+          <span class="spinner" id="btnSpinner"></span>
+        </button>
+        </form>
+      </div>
+    </section>
+
+    <section id="terms" class="card">
+      <h2>Terms and Conditions</h2>
+      <p>Students registering for ICT461 must complete all distributed systems lab assignments and attend scheduled lectures. Course materials remain intellectual property of the department.</p>
+    </section>
+
+    <section id="privacy" class="card">
+      <h2>Privacy Policy</h2>
+      <p>Your registration information is used exclusively for academic records and access control within the ICT461 learning management system. Data is stored securely and never shared with third parties.</p>
+    </section>
+  </main>
+
+  <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="successTitle">
+    <h2 id="successTitle">Registration Successful</h2>
+    <p>Welcome to ICT461. Your account is active.</p>
+    <p id="timestampText" style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--muted);"></p>
+    <button class="btn" id="closeModal" style="margin-top: 1rem;">Continue to Course</button>
+  </div>
+
+  <div id="cookieBanner" class="banner">
+    <p>This site uses essential cookies to manage authentication and user preferences.</p>
+    <button class="btn" id="acceptCookies">Accept</button>
+  </div>
+
+  <script>
+    // System Configurations & Utilities
+    const state = {
+      darkMode: false,
+      utmParams: {}
+    };
+
+    // Parse UTM Parameters
+    function captureUTM() {
+      const urlParams = new URLSearchParams(window.location.search);
+      ['utm_source', 'utm_medium', 'utm_campaign'].forEach(param => {
+        if (urlParams.has(param)) {
+          state.utmParams[param] = urlParams.get(param);
+        }
+      });
+      sessionStorage.setItem('ict461UtmParams', JSON.stringify(state.utmParams));
+    }
+
+    // Toggle Dark Mode
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.addEventListener('click', () => {
+      state.darkMode = !state.darkMode;
+      document.documentElement.setAttribute('data-theme', state.darkMode ? 'dark' : 'light');
+      themeBtn.textContent = state.darkMode ? 'Light Mode' : 'Dark Mode';
+      themeBtn.setAttribute('aria-pressed', String(state.darkMode));
+    });
+
+    // Mobile Navigation
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Password Visibility Toggle
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePasswordBtn.textContent = isPassword ? 'Hide' : 'Show';
+    });
+
+    // Cookie Banner
+    const cookieBanner = document.getElementById('cookieBanner');
+    document.getElementById('acceptCookies').addEventListener('click', () => {
+      cookieBanner.classList.add('hidden');
+    });
+
+    // Form Validation & Submission Handling
+    const form = document.getElementById('registrationForm');
+    const formAlert = document.getElementById('formAlert');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('btnSpinner');
+    const btnText = submitBtn.querySelector('.btn-text');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Clear previous states
+      let isValid = true;
+      document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+      formAlert.className = 'form-state';
+      formAlert.style.display = 'none';
+
+      // Inputs
+      const name = document.getElementById('fullName');
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+      const terms = document.getElementById('termsCheck');
+
+      // Validations
+      if (!name.value.trim()) {
+        document.getElementById('nameError').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!email.value.includes('@') || !email.value.includes('.')) {
+        document.getElementById('emailError').style.display = 'block';
+        isValid = false;
+      }
+
+      if (password.value.length < 8) {
+        document.getElementById('passwordError').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!terms.checked) {
+        document.getElementById('termsError').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!isValid) {
+        formAlert.textContent = 'Please correct the errors in the form below.';
+        formAlert.classList.add('error');
+        formAlert.style.display = 'block';
+        return;
+      }
+
+      // Loading Animation
+      btnText.style.display = 'none';
+      spinner.style.display = 'inline-block';
+      submitBtn.disabled = true;
+
+      // Simulated Async Request
+      setTimeout(() => {
+        btnText.style.display = 'inline';
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
+
+        // Display Success State
+        formAlert.textContent = 'Registration details verified successfully.';
+        formAlert.classList.add('success');
+        formAlert.style.display = 'block';
+
+        // Display Confirmation Modal & Last Successful Login Timestamp
+        const now = new Date().toLocaleString();
+        document.getElementById('timestampText').textContent = `Last successful login timestamp: ${now}`;
+        const loginModal = document.getElementById('loginModal');
+        loginModal.style.display = 'block';
+        loginModal.setAttribute('aria-hidden', 'false');
+        
+        form.reset();
+      }, 1500);
+    });
+
+    // Close Modal
+    document.getElementById('closeModal').addEventListener('click', () => {
+      const loginModal = document.getElementById('loginModal');
+      loginModal.style.display = 'none';
+      loginModal.setAttribute('aria-hidden', 'true');
+    });
+
+    // Initialize Setup
+    captureUTM();
+  </script>
+</body>
+</html>
